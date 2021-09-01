@@ -12,12 +12,13 @@ BOT_NAME = 'ocw'
 SPIDER_MODULES = ['ocw.spiders']
 NEWSPIDER_MODULE = 'ocw.spiders'
 
+FILES_STORE = "../../data"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'ocw (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -62,9 +63,10 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'ocw.pipelines.OcwPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'ocw.pipelines.CourseItemCheckPipeline': 300,
+   'ocw.pipelines.SaveToCsvPipeline': 999,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
