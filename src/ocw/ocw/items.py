@@ -44,4 +44,7 @@ class CourseItem(scrapy.Item):
     schoolSemester = scrapy.Field()
     mediaCount = scrapy.Field()
     references = scrapy.Field()
+    source = scrapy.Field()
     
+    def __repr__(self):
+        return f"{self['name']}({self['url']})"
