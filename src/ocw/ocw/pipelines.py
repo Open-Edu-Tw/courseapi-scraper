@@ -13,7 +13,7 @@ class CourseItemCheckPipeline:
     def process_item(self, item, spider):
         # type check
         for colname in ["startDate", "endDate"]:
-            if item[colname] and not isinstance(item[colname], datetime.datetime):
+            if colname in item and item[colname] and not isinstance(item[colname], datetime.datetime):
                 spider.logger.error(f"[Type Error] {colname} in course {item['name']} is not datetime.")
         
         # mandatory column
