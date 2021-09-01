@@ -9,9 +9,8 @@ url = "https://www.tocec.org.tw/web/subjects_results.jsp"
 class TocecSpider(OCWScraper):
     name = 'tocec'
     allowed_domains = ['tocec.org.tw']
-    defined_columns = ["providerInstitution", "name", "url", "instructor", "startDate", "endDate", "mediaType", "source"]
 
-    def start_requests(self):
+    def start_requests(self):ss
         yield scrapy.Request(url=url, callback=self.parse_main)
         
     def parse_main(self, response):

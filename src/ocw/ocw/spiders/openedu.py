@@ -11,10 +11,6 @@ url = "https://www.openedu.tw/list.jsp"
 class OpenEduSpider(OCWScraper):
     name = 'openedu'
     allowed_domains = ['openedu.tw']
-    defined_columns = ["startDate", "providerInstitution", "startDate", "endDate", "certification",
-                       "category", "lectureLanguage", "price", "description", "objective", "TA",
-                       "schedule", "evaluation", "subtitleLanguage", "instructor", "hoursPerWeek",
-                       "videoUrl", "prerequisites", "source"]  # 19
 
     def start_requests(self):
         yield scrapy.Request(url="https://www.openedu.tw/api/courses/search?lang=en", callback=self.parse_main)
