@@ -32,7 +32,7 @@ class CourseItem(scrapy.Item):
     prerequisites = scrapy.Field()
     others = scrapy.Field()
     hoursPerWeek = scrapy.Field()
-    introductionVideoUrl = scrapy.Field()
+    videoUrl = scrapy.Field()
     deadline = scrapy.Field()
     updatedDate = scrapy.Field()
     teachingMethod = scrapy.Field()
@@ -40,10 +40,12 @@ class CourseItem(scrapy.Item):
     content = scrapy.Field()
     passStandard = scrapy.Field()
     certification = scrapy.Field()
+    certificationFee = scrapy.Field()
     mediaType = scrapy.Field()
     schoolSemester = scrapy.Field()
     mediaCount = scrapy.Field()
     references = scrapy.Field()
+    objective = scrapy.Field()
     source = scrapy.Field()
     
     def __repr__(self):
