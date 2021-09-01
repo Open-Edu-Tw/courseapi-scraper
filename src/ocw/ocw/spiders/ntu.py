@@ -53,13 +53,6 @@ class NtuSpider(OCWScraper):
     def get_description(self, response):
         return response.xpath("//h4[@class='unit']/following-sibling::p/text()").get().strip()
 
-    @OCWScraper.get_element_handler(default_return_value="")
-    def get_start_end_date(self, tr):
-        start_date, end_date = tr.xpath(".//td[4]/text()").get().split("至")
-        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-        end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
-        return start_date, end_date
-
     @OCWScraper.get_element_handler(default_return_value=[])
     def get_media_type(self, response):
         is_video = len(response.xpath("//img[contains(@src, 'icon-V')]")) > 0
