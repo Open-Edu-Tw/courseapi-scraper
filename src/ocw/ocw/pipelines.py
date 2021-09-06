@@ -37,7 +37,7 @@ class SaveToCsvPipeline:
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
         
         df = pd.DataFrame(self.items)
-        df[spider.defined_columns].to_csv(save_path)
+        df.to_csv(save_path)
         spider.logger.info(f"Csv is exported to {save_path}. Total records={len(df)}")
 
         
