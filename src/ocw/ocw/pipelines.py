@@ -22,7 +22,7 @@ class CourseItemCheckPipeline:
         for colname in spider.mandatory_columns:
             if not item[colname]:
                 raise DropItem(f"[Empty Result] {colname} in course {item['name']} is empty.")
-            
+        
         return item
 
 class SaveToCsvPipeline:
@@ -50,11 +50,15 @@ class MongoDBPipeline:
         self.db = self.db_client[db_name]
 
     def process_item(self, item, spider):
-        self.insert_course(item)
+        # filter only needed
+        course_dict = dict(item)
+        for key in course_dict:
+            if key not in ["name", "url", "instructor", "description", "providerInstitution", "source"]:
+                course_dict.pop(key)            
+        self.insert_course(course_dict)
         return item
 
-    def insert_course(self, item):
-        item = dict(item)
+    def insert_course(self, item: dict):
         self.db.course.insert_one(item)
 
     def close_spider(self, spider):
