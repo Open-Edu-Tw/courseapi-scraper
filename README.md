@@ -18,5 +18,5 @@ CourseAPI 開放式課程資訊匯流學院 爬蟲repo
 3. `cd scraping`
 4. `pip install -r requirements.txt`
 5. `cd src/ocw`
-6. `scrapy crawl <platform name>`
+6. `scrapy crawl <platform name>` 這裡 <platform name> 放 ntu/openedu/tocec
 7. 可以進 MongoDB 看爬下來的資料啦！
