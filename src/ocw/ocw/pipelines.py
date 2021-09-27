@@ -6,6 +6,8 @@ import os
 import datetime
 
 import pandas as pd
+from pymongo import MongoClient
+
 from scrapy.exceptions import DropItem
 
 
@@ -40,4 +42,20 @@ class SaveToCsvPipeline:
         df.to_csv(save_path)
         spider.logger.info(f"Csv is exported to {save_path}. Total records={len(df)}")
 
-        
+class MongoDBPipeline:
+    def open_spider(self, spider):
+        db_uri = spider.settings.get('MONGODB_URI', 'mongodb://localhost:27017')
+        db_name = spider.settings.get('MONGODB_DB_NAME', 'scraping')
+        self.db_client = MongoClient(db_uri)
+        self.db = self.db_client[db_name]
+
+    def process_item(self, item, spider):
+        self.insert_course(item)
+        return item
+
+    def insert_course(self, item):
+        item = dict(item)
+        self.db.course.insert_one(item)
+
+    def close_spider(self, spider):
+        self.db_clients.close()
