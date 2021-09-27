@@ -17,30 +17,33 @@ class CourseItemCheckPipeline:
         for colname in ["startDate", "endDate"]:
             if colname in item and item[colname] and not isinstance(item[colname], datetime.datetime):
                 spider.logger.error(f"[Type Error] {colname} in course {item['name']} is not datetime.")
-        
+
         # mandatory column
         for colname in spider.mandatory_columns:
             if not item[colname]:
                 raise DropItem(f"[Empty Result] {colname} in course {item['name']} is empty.")
-        
+
         return item
+
 
 class SaveToCsvPipeline:
     file = None
+
     def open_spider(self, spider):
         self.items = []
-    
+
     def process_item(self, item, spider):
         self.items.append(dict(item))
         return item
-    
+
     def close_spider(self, spider):
         save_path = os.path.join(spider.settings["FILES_STORE"], spider.name, f"{datetime.datetime.now().strftime('%Y-%m-%d')}.csv")
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
-        
+
         df = pd.DataFrame(self.items)
         df.to_csv(save_path)
         spider.logger.info(f"Csv is exported to {save_path}. Total records={len(df)}")
+
 
 class MongoDBPipeline:
     def open_spider(self, spider):
@@ -54,7 +57,10 @@ class MongoDBPipeline:
         course_dict = dict(item)
         insert_dict = {}
         for key in ["name", "url", "instructor", "description", "providerInstitution", "source"]:
-            insert_dict[key] = course_dict[key]        
+            if key in course_dict:
+                insert_dict[key] = course_dict[key]
+            else:
+                insert_dict[key] = ""
         self.insert_course(insert_dict)
         return item
 
