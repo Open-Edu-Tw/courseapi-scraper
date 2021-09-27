@@ -52,10 +52,10 @@ class MongoDBPipeline:
     def process_item(self, item, spider):
         # filter only needed
         course_dict = dict(item)
-        for key in course_dict:
-            if key not in ["name", "url", "instructor", "description", "providerInstitution", "source"]:
-                course_dict.pop(key)            
-        self.insert_course(course_dict)
+        insert_dict = {}
+        for key in ["name", "url", "instructor", "description", "providerInstitution", "source"]:
+            insert_dict[key] = course_dict[key]        
+        self.insert_course(insert_dict)
         return item
 
     def insert_course(self, item: dict):
