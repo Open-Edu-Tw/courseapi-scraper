@@ -65,4 +65,4 @@ class Scraper(scrapy.Spider):
         return _get_element_handler
     
 class OCWScraper(Scraper):
-    mandatory_columns = ["name", "url"]
+    mandatory_columns = ["name", "url", "instructor", "providerInstitution", "source", "description"]
