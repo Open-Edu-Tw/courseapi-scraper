@@ -12,12 +12,15 @@ from scrapy.exceptions import DropItem
 
 
 class CourseItemCheckPipeline:
-    def process_item(self, item, spider):
-        # type check
+    def date_check(self, item, spider):
         for colname in ["startDate", "endDate"]:
             if colname in item and item[colname] and not isinstance(item[colname], datetime.datetime):
                 spider.logger.error(f"[Type Error] {colname} in course {item['name']} is not datetime.")
-
+        
+    def process_item(self, item, spider):
+        # type check
+        self.date_check(item, spider)
+        
         # mandatory column
         for colname in spider.mandatory_columns:
             if not item[colname]:
