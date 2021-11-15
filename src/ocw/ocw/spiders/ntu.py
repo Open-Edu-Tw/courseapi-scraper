@@ -1,13 +1,15 @@
-import datetime
+from abc import ABC
+from typing import List
 
 import scrapy
-from ocw.items import CourseItem
-from ocw.spiders.Scraper import OCWScraper
+from src.ocw.ocw.spiders.Scraper import OCWScraper
+
+from src.ocw.ocw.items import TypedCourseItem, MediaType
 
 url = "http://ocw.aca.ntu.edu.tw/ntu-ocw/ocw/coupage"
 
 
-class NtuSpider(OCWScraper):
+class NtuSpider(OCWScraper, ABC):
     name = 'ntu'
     allowed_domains = ['ocw.aca.ntu.edu.tw']
 
@@ -16,6 +18,7 @@ class NtuSpider(OCWScraper):
 
     def parse_main(self, response):
         courses = response.xpath("//div[@class='coursebox']")
+
         for course in courses:
             course_url = course.xpath(".//a/@href").get()
             teacher = course.xpath(".//div[@class='teacher']/text()").get().strip()
@@ -30,24 +33,21 @@ class NtuSpider(OCWScraper):
                 yield scrapy.Request(f"{response.url}/{p}", callback=self.parse_main, meta={"page": p})
 
     def parse_course(self, response):
-        course_item = CourseItem()
-        course_item["name"] = response.xpath("//h2[@class='title']/text()").get()
-        course_item["url"] = response.url
-        course_item["instructor"] = response.meta["teacher"]
-        course_item["providerInstitution"] = "NTU"
-        course_item["providerDepartment"] = self.get_department(response)
-        course_item["description"] = self.get_description(response)
-        course_item["mediaType"] = self.get_media_type(response)
-        course_item["source"] = "國立臺灣大學"
-
-        yield course_item
+        yield TypedCourseItem(
+            name=response.xpath("//h2[@class='title']/text()").get(),
+            url=response.url,
+            instructor=response.meta["teacher"],
+            provider_institution="NTU",
+            provider_department=self.get_department(response),
+            description=self.get_description(response),
+            media_type=self.get_media_type(response),
+            source="國立臺灣大學",
+        )
 
     @OCWScraper.get_element_handler(default_return_value=None)
     def get_department(self, response):
         department = response.xpath("//h4[@class='unit']/text()").get().split(" ")[0].split("\xa0")[0]
-        if department:
-            return department
-        return None
+        return department
 
     @OCWScraper.get_element_handler(default_return_value="")
     def get_description(self, response):
@@ -55,11 +55,18 @@ class NtuSpider(OCWScraper):
 
     @OCWScraper.get_element_handler(default_return_value=[])
     def get_media_type(self, response):
-        is_video = len(response.xpath("//img[contains(@src, 'icon-V')]")) > 0
-        is_slide = len(response.xpath("//img[contains(@src, 'icon-L')]")) > 0
-        medias = []
+        def is_xpath(xpath):
+            return len(response.xpath(xpath)) > 0
+
+        medias: List[MediaType] = []
+
+        is_video = is_xpath("//img[contains(@src, 'icon-V')]")
+        is_slide = is_xpath("//img[contains(@src, 'icon-L')]")
+
         if is_video:
-            medias.append("Video")
+            medias.append(MediaType.VIDEO)
+
         if is_slide:
-            medias.append("Slide")
+            medias.append(MediaType.SLIDE)
+
         return medias
