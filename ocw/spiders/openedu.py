@@ -1,9 +1,8 @@
 import datetime
 
 import scrapy
-from scrapy.http import HtmlResponse
 from ocw.items import CourseItem
-from ocw.spiders.Scraper import OCWScraper, init_logger
+from ocw.spiders.Scraper import OCWScraper
 
 url = "https://www.openedu.tw/list.jsp"
 

@@ -2,9 +2,9 @@ from abc import ABC
 from typing import List
 
 import scrapy
-from src.ocw.ocw.spiders.Scraper import OCWScraper
+from ocw.spiders.Scraper import OCWScraper
 
-from src.ocw.ocw.items import TypedCourseItem, MediaType
+from ocw.items import TypedCourseItem, MediaType
 
 url = "http://ocw.aca.ntu.edu.tw/ntu-ocw/ocw/coupage"
 
