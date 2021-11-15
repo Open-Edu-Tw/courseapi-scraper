@@ -1,7 +1,7 @@
 import datetime
 
 import scrapy
-from ocw.items import CourseItem
+from ocw.items import TypedCourseItem
 from ocw.spiders.Scraper import OCWScraper
 
 url = "https://www.openedu.tw/list.jsp"
@@ -22,34 +22,34 @@ class OpenEduSpider(OCWScraper):
 
     def parse_course(self, response):
         course_dict = response.json()
-        course_item = CourseItem()
-        course_item["name"] = course_dict.get("name", None)
-        course_item["url"] = response.url
-        course_item["providerInstitution"] = course_dict.get("institute", None)
-        course_item["startDate"] = self.get_date(course_dict, "startDate")
-        course_item["endDate"] = self.get_date(course_dict, "endDate")
-        course_item["certification"] = course_dict.get("certificate", None)  # bool
-        course_item["category"] = course_dict.get("category", None)
-        course_item["lectureLanguage"] = course_dict.get("language", None)
-        course_item["price"] = course_dict.get("price", None)
-        course_item["description"] = course_dict.get("intro", None)  # html text
-        course_item["objective"] = course_dict.get("objective", None)   # html text
-        course_item["TA"] = course_dict.get("target", "")  # html text
-        course_item["schedule"] = course_dict.get("schedule", None)
-        course_item["evaluation"] = course_dict.get("assessment", None)
-        course_item["subtitleLanguage"] = course_dict.get("transcript", None)
-        course_item["instructor"] = [instructor["name"] for instructor in course_dict["instructors"]]
-        course_item["hoursPerWeek"] = course_dict.get("hoursPerWeek", None)
-        course_item["videoUrl"] = course_dict.get("videoUrl", None)
-        course_item["prerequisites"] = course_dict.get("prerequisite", None)
-        course_item["source"] = "中華開放教育平台"
 
-        yield course_item
+        yield TypedCourseItem(
+            name=course_dict.get("name", "無課程名稱"),
+            url=response.url,
+            provider_institution=course_dict.get("institute", None),
+            start_date=self.get_date(course_dict, "startDate"),
+            end_date=self.get_date(course_dict, "endDate"),
+            certification=course_dict.get("certificate", False),
+            category=course_dict.get("category", []),
+            lecture_language=course_dict.get("language", None),
+            price=course_dict.get("price", None),
+            description=course_dict.get("intro", ""),
+            objective=course_dict.get("objective", None),
+            TA=course_dict.get("target", None),
+            schedule=course_dict.get("schedule", None),
+            evaluation=course_dict.get("assessment", None),
+            subtitle_language=course_dict.get("transcript", []),
+            instructor=[instructor["name"] for instructor in course_dict["instructors"]],
+            hours_per_week=course_dict.get("hoursPerWeek", None),
+            video_url=course_dict.get("videoUrl", None),
+            prerequisites=course_dict.get("prerequisite", None),
+            source="中華開放教育平台"
+        )
 
     def get_value(self, course_dict, key):
         return course_dict[key]
 
     def get_date(self, course_dict, key):
         if key in course_dict and course_dict[key]:
-            return datetime.datetime.strptime(course_dict["startDate"], "%Y-%m-%d")
+            return datetime.datetime.strptime(course_dict[key], "%Y-%m-%d")
         return None

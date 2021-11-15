@@ -36,7 +36,7 @@ class NtuSpider(OCWScraper, ABC):
         yield TypedCourseItem(
             name=response.xpath("//h2[@class='title']/text()").get(),
             url=response.url,
-            instructor=response.meta["teacher"],
+            instructor=[response.meta["teacher"]],
             provider_institution="NTU",
             provider_department=self.get_department(response),
             description=self.get_description(response),
