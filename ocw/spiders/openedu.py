@@ -1,4 +1,5 @@
 import datetime
+from abc import ABC
 
 import scrapy
 from ocw.items import TypedCourseItem
@@ -7,7 +8,7 @@ from ocw.spiders.Scraper import OCWScraper
 url = "https://www.openedu.tw/list.jsp"
 
 
-class OpenEduSpider(OCWScraper):
+class OpenEduSpider(OCWScraper, ABC):
     name = 'openedu'
     allowed_domains = ['openedu.tw']
 
@@ -27,8 +28,8 @@ class OpenEduSpider(OCWScraper):
             name=course_dict.get("name", "無課程名稱"),
             url=response.url,
             provider_institution=course_dict.get("institute", None),
-            start_date=self.get_date(course_dict, "startDate"),
-            end_date=self.get_date(course_dict, "endDate"),
+            start_date=self._get_date(course_dict, "startDate"),
+            end_date=self._get_date(course_dict, "endDate"),
             certification=course_dict.get("certificate", False),
             category=course_dict.get("category", []),
             lecture_language=course_dict.get("language", None),
@@ -46,10 +47,8 @@ class OpenEduSpider(OCWScraper):
             source="中華開放教育平台"
         )
 
-    def get_value(self, course_dict, key):
-        return course_dict[key]
-
-    def get_date(self, course_dict, key):
+    @classmethod
+    def _get_date(cls, course_dict, key):
         if key in course_dict and course_dict[key]:
             return datetime.datetime.strptime(course_dict[key], "%Y-%m-%d")
         return None

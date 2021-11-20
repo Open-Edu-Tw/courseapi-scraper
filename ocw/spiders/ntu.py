@@ -2,6 +2,7 @@ from abc import ABC
 from typing import List
 
 import scrapy
+
 from ocw.spiders.Scraper import OCWScraper
 
 from ocw.items import TypedCourseItem, MediaType
@@ -38,23 +39,25 @@ class NtuSpider(OCWScraper, ABC):
             url=response.url,
             instructor=[response.meta["teacher"]],
             provider_institution="NTU",
-            provider_department=self.get_department(response),
-            description=self.get_description(response),
-            media_type=self.get_media_type(response),
+            provider_department=self._get_department(response),
+            description=self._get_description(response),
+            media_type=self._get_media_type(response),
             source="國立臺灣大學",
         )
 
     @OCWScraper.get_element_handler(default_return_value=None)
-    def get_department(self, response):
+    def _get_department(self, response):
         department = response.xpath("//h4[@class='unit']/text()").get().split(" ")[0].split("\xa0")[0]
         return department
 
+    @classmethod
     @OCWScraper.get_element_handler(default_return_value="")
-    def get_description(self, response):
+    def _get_description(cls, response):
         return response.xpath("//h4[@class='unit']/following-sibling::p/text()").get().strip()
 
+    @classmethod
     @OCWScraper.get_element_handler(default_return_value=[])
-    def get_media_type(self, response):
+    def _get_media_type(cls, response):
         def is_xpath(xpath):
             return len(response.xpath(xpath)) > 0
 

@@ -7,7 +7,7 @@ from loguru import logger
 import scrapy
 
 
-def init_logger(name, save_dir=None):
+def init_logger(name, save_dir: str | None):
     class InterceptHandler(logging.Handler):
         def emit(self, record):
             try:
@@ -24,7 +24,7 @@ def init_logger(name, save_dir=None):
                 level, record.getMessage()
             )
 
-    stream_handler = None
+    stream_handler: logging.Handler | None = None
     for handler in logging.getLogger().handlers:
         if "StreamHandler" in str(handler):
             stream_handler = handler
@@ -34,7 +34,7 @@ def init_logger(name, save_dir=None):
     intercept_handler = InterceptHandler()
     logging.getLogger().addHandler(intercept_handler)
 
-    logger.configure(handlers=[{"sink": sys.stderr, }])
+    logger.configure(handlers=[{"sink": sys.stderr}])
     logging.basicConfig(handlers=[intercept_handler], level=0)
 
     if save_dir:
@@ -57,7 +57,7 @@ class Scraper(scrapy.Spider, ABC):
                     result = method(*args, **kwargs)
                     return result or default_return_value
                 except (IndexError, KeyError, TypeError, AttributeError) as e:  # cannot get element
-                    args[0].logger.debug(f"{method.__name__} fails. No such element. {e}")
+                    args[0].logger.debug(f"{method.__name__} fails. No such a element. {e}")
                     return default_return_value
                 except Exception as e:
                     args[0].logger.exception("")
