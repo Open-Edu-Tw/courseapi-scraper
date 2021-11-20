@@ -2,11 +2,8 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-import os
-import datetime
 from abc import ABC, abstractmethod
 
-import pandas as pd
 from pymongo import MongoClient
 from pymongo.collection import Collection
 from pymongo.database import Database
@@ -25,16 +22,9 @@ class PipelineAbstract(ABC):
     def close_spider(self, spider): pass
 
 
-class CourseItemCheckPipeline(PipelineAbstract):
-    def open_spider(self, spider):
-        pass
-
-    def close_spider(self, spider):
-        pass
-
-    def process_item(self, item: TypedCourseItem, spider) -> TypedCourseItem:
-        return item
-
+# Disabled: To enable this, please enable the "csv" feature.
+"""
+import pandas as pd
 
 class SaveToCsvPipeline(PipelineAbstract):
     items: list[dict] = None
@@ -54,6 +44,7 @@ class SaveToCsvPipeline(PipelineAbstract):
         df = pd.DataFrame(self.items)
         df.to_csv(save_path)
         spider.logger.info(f"CSV has been exported to {save_path}. Total records={len(df)}")
+"""
 
 
 class MongoDBPipeline(PipelineAbstract):
