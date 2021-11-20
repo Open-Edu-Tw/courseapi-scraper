@@ -2,7 +2,7 @@ import datetime
 from abc import ABC
 
 import scrapy
-from ocw.items import TypedCourseItem, MediaType
+from ocw.items import CourseItem, MediaType
 from ocw.spiders.Scraper import OCWScraper
 
 url = "https://www.tocec.org.tw/web/subjects_results.jsp"
@@ -21,7 +21,7 @@ class TocecSpider(OCWScraper, ABC):
             start_date, end_date = self._get_start_end_date(tr)
             name, relative_url = self._get_course_name_and_href(tr)
             course_url = response.urljoin(relative_url)
-            course_item = TypedCourseItem(
+            course_item = CourseItem(
                 provider_institution=self._get_institution(tr),
                 name=name,
                 url=course_url,
@@ -50,7 +50,7 @@ class TocecSpider(OCWScraper, ABC):
             )
 
     @classmethod
-    def parse_description(cls, response, item: TypedCourseItem):
+    def parse_description(cls, response, item: CourseItem):
         description = response.css("div.ClassInfo").get()
         item.description = description
         yield item

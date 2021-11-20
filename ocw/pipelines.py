@@ -8,7 +8,7 @@ from pymongo import MongoClient
 from pymongo.collection import Collection
 from pymongo.database import Database
 
-from ocw.items import TypedCourseItem
+from ocw.items import CourseItem
 
 
 class PipelineAbstract(ABC):
@@ -16,7 +16,7 @@ class PipelineAbstract(ABC):
     def open_spider(self, spider): pass
 
     @abstractmethod
-    def process_item(self, item: TypedCourseItem, spider) -> TypedCourseItem: pass
+    def process_item(self, item: CourseItem, spider) -> CourseItem: pass
 
     @abstractmethod
     def close_spider(self, spider): pass
@@ -57,7 +57,7 @@ class MongoDBPipeline(PipelineAbstract):
         self.db_client = MongoClient(db_uri)
         self.db = self.db_client[db_name]
 
-    def process_item(self, item: TypedCourseItem, spider) -> TypedCourseItem:
+    def process_item(self, item: CourseItem, spider) -> CourseItem:
         # filter only needed
         insert_dict = {
             "name": item.name,

@@ -1,7 +1,7 @@
 from abc import ABC
 
 import scrapy
-from ocw.items import TypedCourseItem
+from ocw.items import CourseItem
 from ocw.spiders.Scraper import OCWScraper
 
 url = "https://www.sharecourse.net/sharecourse/course/view/categorySearch/6/23?type=2&page=1"
@@ -32,7 +32,7 @@ class ShardCourseSpider(OCWScraper, ABC):
                                      f"?type=2&page={p}", callback=self.parse_main, meta={"page": p})
 
     def parse_course(self, response, teacher: str):
-        yield TypedCourseItem(
+        yield CourseItem(
             name=response.xpath("//h1/text()").get(),
             url=response.url,
             instructor=[teacher],

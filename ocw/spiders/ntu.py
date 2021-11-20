@@ -5,7 +5,7 @@ import scrapy
 
 from ocw.spiders.Scraper import OCWScraper
 
-from ocw.items import TypedCourseItem, MediaType
+from ocw.items import CourseItem, MediaType
 
 url = "http://ocw.aca.ntu.edu.tw/ntu-ocw/ocw/coupage"
 
@@ -34,7 +34,7 @@ class NtuSpider(OCWScraper, ABC):
                 yield scrapy.Request(f"{response.url}/{p}", callback=self.parse_main, meta={"page": p})
 
     def parse_course(self, response, teacher: str):
-        yield TypedCourseItem(
+        yield CourseItem(
             name=response.xpath("//h2[@class='title']/text()").get(),
             url=response.url,
             instructor=[teacher],

@@ -2,7 +2,7 @@ import datetime
 from abc import ABC
 
 import scrapy
-from ocw.items import TypedCourseItem
+from ocw.items import CourseItem
 from ocw.spiders.Scraper import OCWScraper
 
 url = "https://www.openedu.tw/list.jsp"
@@ -24,7 +24,7 @@ class OpenEduSpider(OCWScraper, ABC):
     def parse_course(self, response):
         course_dict = response.json()
 
-        yield TypedCourseItem(
+        yield CourseItem(
             name=course_dict.get("name", ""),
             url=response.url,
             provider_institution=course_dict.get("institute", None),

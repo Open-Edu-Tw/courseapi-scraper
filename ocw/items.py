@@ -33,7 +33,7 @@ class MediaType(Enum):
     UNKNOWN = "unknown"
 
 
-class TypedCourseItem(BaseModel):
+class CourseItem(BaseModel):
     """
     一個課程的各個資訊。
 
