@@ -6,7 +6,6 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional, Any, List, Dict
 
-import scrapy
 from pydantic import BaseModel
 
 # 選擇性填寫的文字。
@@ -20,6 +19,14 @@ o_bool = Optional[bool]
 
 
 class MediaType(Enum):
+    """
+    媒體類型。
+
+    VIDEO - 影片
+    SLIDE - 簡報
+    PAPER - PDF/DOCX/ODF 等紙本文件
+    UNKNOWN - 未定義類型
+    """
     VIDEO = "video"
     SLIDE = "slide"
     PAPER = "paper"
@@ -27,7 +34,11 @@ class MediaType(Enum):
 
 
 class TypedCourseItem(BaseModel):
-    """一個課程的各個資訊。"""
+    """
+    一個課程的各個資訊。
+
+    關於每個欄位的說明，可見 TypedCourseItem 的程式碼。
+    """
     # 課程的 URL
     url: str
     # 課程名稱
@@ -108,49 +119,3 @@ class TypedCourseItem(BaseModel):
     references: o_str = None
     # 主體 (html text)
     objective: o_str = None
-
-
-class CourseItem(scrapy.Item):
-    url = scrapy.Field()
-    mode = scrapy.Field()
-    name = scrapy.Field()
-    english_name = scrapy.Field()
-    provider_institution = scrapy.Field()
-    provider_department = scrapy.Field()
-    instructor = scrapy.Field()
-    establish_date = scrapy.Field()
-    hit_count = scrapy.Field()
-    category = scrapy.Field()
-    lecture_language = scrapy.Field()
-    subtitle_language = scrapy.Field()
-    price = scrapy.Field()
-    TA = scrapy.Field()
-    highlight = scrapy.Field()
-    schedule = scrapy.Field()
-    subcategory = scrapy.Field()
-    is_self_learning = scrapy.Field()
-    description = scrapy.Field()
-    start_date = scrapy.Field()
-    end_date = scrapy.Field()
-    evaluation = scrapy.Field()
-    prerequisites = scrapy.Field()
-    others = scrapy.Field()
-    hours_per_week = scrapy.Field()
-    video_url = scrapy.Field()
-    deadline = scrapy.Field()
-    updated_date = scrapy.Field()
-    teaching_method = scrapy.Field()
-    extended_course = scrapy.Field()
-    content = scrapy.Field()
-    pass_standard = scrapy.Field()
-    certification = scrapy.Field()
-    certification_fee = scrapy.Field()
-    media_type = scrapy.Field()
-    school_semester = scrapy.Field()
-    media_count = scrapy.Field()
-    references = scrapy.Field()
-    objective = scrapy.Field()
-    source = scrapy.Field()
-
-    def __repr__(self):
-        return f"{self['name']}({self['url']})"
