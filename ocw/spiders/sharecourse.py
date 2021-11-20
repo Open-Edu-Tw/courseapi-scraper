@@ -21,7 +21,7 @@ class ShardCourseSpider(OCWScraper, ABC):
             teacher = course.xpath(".//p[@class='teacher']/text()").get().strip()
             yield scrapy.Request(url=course_url,
                                  callback=self.parse_course,
-                                 meta={"teacher": teacher})
+                                 cb_kwargs={"teacher": teacher})
 
         # next page
         if "page" not in response.meta:  # run only at first page
@@ -31,11 +31,11 @@ class ShardCourseSpider(OCWScraper, ABC):
                 yield scrapy.Request("https://www.sharecourse.net/sharecourse/course/view/categorySearch/6/23"
                                      f"?type=2&page={p}", callback=self.parse_main, meta={"page": p})
 
-    def parse_course(self, response):
+    def parse_course(self, response, teacher: str):
         yield TypedCourseItem(
             name=response.xpath("//h1/text()").get(),
             url=response.url,
-            instructor=[response.meta["teacher"]],
+            instructor=[teacher],
             provider_institution="ShareCourse",
             description=self._get_description(response),
             source="ShareCourse 學聯網"

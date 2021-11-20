@@ -25,7 +25,7 @@ class NtuSpider(OCWScraper, ABC):
             teacher = course.xpath(".//div[@class='teacher']/text()").get().strip()
             yield scrapy.Request(url=course_url,
                                  callback=self.parse_course,
-                                 meta={"teacher": teacher})
+                                 cb_kwargs={"teacher": teacher})
 
         # next page
         if "page" not in response.meta:  # run only at first page
@@ -33,11 +33,11 @@ class NtuSpider(OCWScraper, ABC):
             for p in range(2, last_page_num + 1):
                 yield scrapy.Request(f"{response.url}/{p}", callback=self.parse_main, meta={"page": p})
 
-    def parse_course(self, response):
+    def parse_course(self, response, teacher: str):
         yield TypedCourseItem(
             name=response.xpath("//h2[@class='title']/text()").get(),
             url=response.url,
-            instructor=[response.meta["teacher"]],
+            instructor=[teacher],
             provider_institution="NTU",
             provider_department=self._get_department(response),
             description=self._get_description(response),
