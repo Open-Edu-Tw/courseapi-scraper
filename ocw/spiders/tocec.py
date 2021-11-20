@@ -19,17 +19,24 @@ class TocecSpider(OCWScraper, ABC):
         # table
         for tr in response.xpath("//tbody//tr"):
             start_date, end_date = self._get_start_end_date(tr)
-
-            yield TypedCourseItem(
+            name, relative_url = self._get_course_name_and_href(tr)
+            course_url = response.urljoin(relative_url)
+            course_item = TypedCourseItem(
                 provider_institution=self._get_institution(tr),
-                name=self._get_course_name(tr),
-                url=response.urljoin(self._get_course_href(tr)),
+                name=name,
+                url=course_url,
                 instructor=[self._get_instructor(tr)],
                 start_date=start_date,
                 end_date=end_date,
                 media_type=self._get_media_type(tr),
                 source="社團法人台灣開放式課程暨教育聯盟",
-                description="",     # todo
+                description="",  # will be written in parse_description()
+            )
+
+            yield scrapy.Request(
+                url=course_url,
+                callback=self.parse_description,
+                cb_kwargs={"item": course_item}
             )
 
         # next page
@@ -42,17 +49,23 @@ class TocecSpider(OCWScraper, ABC):
                 callback=self.parse_main
             )
 
+    @classmethod
+    def parse_description(cls, response, item: TypedCourseItem):
+        description = response.css("div.ClassInfo").get()
+        item.description = description
+        yield item
+
     @OCWScraper.get_element_handler(default_return_value="")
     def _get_institution(self, tr) -> str:
         return tr.xpath(".//td[1]/text()").get().strip()
 
     @OCWScraper.get_element_handler(default_return_value="")
-    def _get_course_name(self, tr) -> str:
-        return tr.xpath(".//td[2]/a/text()").get()
+    def _get_course_name_and_href(self, tr) -> (str, str):
+        course = tr.xpath(".//td[2]/a") #/text()").get()
+        name = course.xpath("./text()").get()
+        href = course.xpath("./@href").get()
 
-    @OCWScraper.get_element_handler(default_return_value="")
-    def _get_course_href(self, tr) -> str:
-        return tr.xpath(".//td[2]/a/@href").get()
+        return name, href
 
     @OCWScraper.get_element_handler(default_return_value="")
     def _get_instructor(self, tr) -> str:
