@@ -8,8 +8,10 @@ from abc import ABC, abstractmethod
 
 import pandas as pd
 from pymongo import MongoClient
+from pymongo.collection import Collection
+from pymongo.database import Database
 
-from scrapy.exceptions import DropItem
+from ocw.items import TypedCourseItem
 
 
 class PipelineAbstract(ABC):
@@ -17,16 +19,10 @@ class PipelineAbstract(ABC):
     def open_spider(self, spider): pass
 
     @abstractmethod
-    def process_item(self, item, spider): pass
+    def process_item(self, item: TypedCourseItem, spider) -> TypedCourseItem: pass
 
     @abstractmethod
     def close_spider(self, spider): pass
-
-
-def date_check(item, spider):
-    for column_name in ["startDate", "endDate"]:
-        if column_name in item and item[column_name] and not isinstance(item[column_name], datetime.datetime):
-            spider.logger.error(f"[Type Error] {column_name} in course {item['name']} is not datetime.")
 
 
 class CourseItemCheckPipeline(PipelineAbstract):
@@ -36,26 +32,17 @@ class CourseItemCheckPipeline(PipelineAbstract):
     def close_spider(self, spider):
         pass
 
-    def process_item(self, item, spider):
-        # type check
-        date_check(item, spider)
-
-        # mandatory column
-        for colname in spider.mandatory_columns:
-            if not item[colname]:
-                raise DropItem(f"[Empty Result] {colname} in course {item['name']} is empty.")
-
+    def process_item(self, item: TypedCourseItem, spider) -> TypedCourseItem:
         return item
 
 
 class SaveToCsvPipeline(PipelineAbstract):
-    file = None
-    items = None
+    items: list[dict] = None
 
     def open_spider(self, spider):
         self.items = []
 
-    def process_item(self, item, spider):
+    def process_item(self, item, spider) -> TypedCourseItem:
         self.items.append(dict(item))
         return item
 
@@ -70,8 +57,8 @@ class SaveToCsvPipeline(PipelineAbstract):
 
 
 class MongoDBPipeline(PipelineAbstract):
-    db_client = None
-    db = None
+    db_client: MongoClient = None
+    db: Database = None
 
     def open_spider(self, spider):
         db_uri = spider.settings.get('MONGODB_URI', 'mongodb://localhost:27017')
@@ -79,20 +66,22 @@ class MongoDBPipeline(PipelineAbstract):
         self.db_client = MongoClient(db_uri)
         self.db = self.db_client[db_name]
 
-    def process_item(self, item, spider):
+    def process_item(self, item: TypedCourseItem, spider) -> TypedCourseItem:
         # filter only needed
-        course_dict = dict(item)
-        insert_dict = {}
-        for key in ["name", "url", "instructor", "description", "providerInstitution", "source"]:
-            if key in course_dict:
-                insert_dict[key] = course_dict[key]
-            else:
-                insert_dict[key] = ""
+        insert_dict = {
+            "name": item.name,
+            "url": item.url,
+            "instructor": item.instructor,
+            "description": item.description,
+            "providerInstitution": item.provider_institution,
+            "source": item.source
+        }
         self.insert_course(insert_dict)
         return item
 
     def insert_course(self, item: dict):
-        self.db.course.insert_one(item)
+        course: Collection = self.db.course
+        course.insert_one(item)
 
     def close_spider(self, spider):
         self.db_client.close()

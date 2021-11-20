@@ -25,13 +25,13 @@ class OpenEduSpider(OCWScraper, ABC):
         course_dict = response.json()
 
         yield TypedCourseItem(
-            name=course_dict.get("name", "無課程名稱"),
+            name=course_dict.get("name", ""),
             url=response.url,
             provider_institution=course_dict.get("institute", None),
             start_date=self._get_date(course_dict, "startDate"),
             end_date=self._get_date(course_dict, "endDate"),
             certification=course_dict.get("certificate", False),
-            category=course_dict.get("category", []),
+            category=[course_dict.get("category", "")],
             lecture_language=course_dict.get("language", None),
             price=course_dict.get("price", None),
             description=course_dict.get("intro", ""),
@@ -39,7 +39,7 @@ class OpenEduSpider(OCWScraper, ABC):
             TA=course_dict.get("target", None),
             schedule=course_dict.get("schedule", None),
             evaluation=course_dict.get("assessment", None),
-            subtitle_language=course_dict.get("transcript", []),
+            subtitle_language=[course_dict.get("category", "")],
             instructor=[instructor["name"] for instructor in course_dict["instructors"]],
             hours_per_week=course_dict.get("hoursPerWeek", None),
             video_url=course_dict.get("videoUrl", None),
@@ -48,7 +48,7 @@ class OpenEduSpider(OCWScraper, ABC):
         )
 
     @classmethod
-    def _get_date(cls, course_dict, key):
+    def _get_date(cls, course_dict, key) -> datetime.datetime | None:
         if key in course_dict and course_dict[key]:
             return datetime.datetime.strptime(course_dict[key], "%Y-%m-%d")
         return None

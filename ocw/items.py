@@ -22,6 +22,8 @@ o_bool = Optional[bool]
 class MediaType(Enum):
     VIDEO = "video"
     SLIDE = "slide"
+    PAPER = "paper"
+    UNKNOWN = "unknown"
 
 
 class TypedCourseItem(BaseModel):

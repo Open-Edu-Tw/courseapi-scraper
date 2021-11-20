@@ -35,14 +35,14 @@ class ShardCourseSpider(OCWScraper, ABC):
         yield TypedCourseItem(
             name=response.xpath("//h1/text()").get(),
             url=response.url,
-            instructor=response.meta["teacher"],
+            instructor=[response.meta["teacher"]],
             provider_institution="ShareCourse",
             description=self._get_description(response),
             source="ShareCourse 學聯網"
         )
 
     @OCWScraper.get_element_handler(default_return_value="")
-    def _get_description(self, response):
+    def _get_description(self, response) -> str:
         texts = response.xpath("//div[@id='cs-desc']/div[@class='content-box']/descendant-or-self::*/text()").extract()
         description = " ".join(texts).strip().replace("\n", " ")
         return description
