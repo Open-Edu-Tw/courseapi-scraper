@@ -1,9 +1,18 @@
 [tool.poetry]
-name = "scraper"
-version = "0.1.0"
+name = "courseapi-scraper"
+version = "0.2.0"
 description = "CourseAPI 開放式課程資訊匯流學院的爬蟲"
-authors = ["Your Name <you@example.com>"]
+authors = ["台灣開放教育推動團隊 <toedu@googlegroups.com>"]
 license = "MIT"
+readme = "README.md"
+homepage = "https://toedu.g0v.tw"
+repository = "https://github.com/Open-Edu-Tw/Scraper"
+keywords = [
+    "scrapy",
+    "courseapi",
+    "scraper",
+    "open"
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
