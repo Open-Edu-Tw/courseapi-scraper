@@ -1,5 +1,5 @@
 # Scraper
-CourseAPI 開放式課程資訊匯流學院 爬蟲repo
+CourseAPI 開放式課程資訊匯流學院 爬蟲 repo
 
 ![Scraper](https://i.imgur.com/frOE8GC.png)
 
@@ -11,12 +11,22 @@ CourseAPI 開放式課程資訊匯流學院 爬蟲repo
 
 ## 如何使用？
 
-1. 下載 Python（這是最基本的xD）
-2. 啟動 MongoDB（`sudo systemctl start mongod`）
-3. `git clone https://github.com/Open-Edu-Tw/scraping.git`
-   若有需要，可自行加上 Personal Access Token
-3. `cd scraping`
-4. `pip install -r requirements.txt`
-5. `cd src/ocw`
-6. `scrapy crawl <platform name>` 這裡 <platform name> 放 ntu/openedu/tocec/sharecourse
-7. 可以進 MongoDB 看爬下來的資料啦！
+1. 下載 Python 和 Poetry（這是最基本的xD）
+   1. [Python (3.10 或以上版本)](https://www.python.org/downloads/)
+   2. [Poetry](https://python-poetry.org/docs/)
+2. 啟動 MongoDB
+   1. Docker 可以直接執行 `docker run mongo` 
+   2. Linux 可以：`sudo systemctl start mongod`
+3. 複製本儲存庫
+   1. 點下本儲存庫的右上角「Code」
+   2. 選擇偏好方式（HTTPS 或 SSH）後執行裡面出現的命令
+4. 之後輸入以下命令：
+   ```shell
+   cd Scraper       # 切換到 Scraper 工作目錄
+   poetry install   # 安裝依賴關係
+   
+   # 這裡的 PlatformName 可以是 ntu/openedu/...
+   # 詳見 ocw/spiders 資料夾裡面的檔案名稱
+   poetry run scrapy crawl PlatformName
+   ```
+5. 可以進 MongoDB 看爬下來的資料啦！
