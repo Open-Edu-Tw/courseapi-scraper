@@ -13,7 +13,9 @@ CourseAPI 開放式課程資訊匯流學院 爬蟲 repo
 
 1. 下載 Python 和 Poetry（這是最基本的xD）
    1. [Python (3.10 或以上版本)](https://www.python.org/downloads/)
-   2. [Poetry](https://python-poetry.org/docs/)
+      1. Ubuntu 可以使用這個命令安裝：`sudo apt install python3.10 python3.10-distutils`  
+      2. 更建議使用 pyenv 安裝 Python
+   3. [Poetry](https://python-poetry.org/docs/)
 2. 啟動 MongoDB
    1. Docker 可以直接執行 `docker run mongo` 
    2. Linux 可以：`sudo systemctl start mongod`
