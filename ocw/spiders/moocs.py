@@ -14,12 +14,6 @@ class MoocsSpider(OCWScraper):
     def start_requests(self):
         yield scrapy.Request(url=url, callback=self.parse_course_directoy)
 
-    # def parse_category(self, response):
-    #     categories = response.xpath("//h2[contains(text(), '課程分類')]/ancestor::section[@class='section-courses']//a").extract()
-    #     for cateogry in categories:
-    #         href = cateogry.xpath("./@href").get()
-    #         scrapy.Request(url=response.urljoin(href), callback=self.parse_course_directoy)
-
     def parse_course_directoy(self, response):
         courses = response.xpath("//div[@class='course-box']")
         for course in courses:
@@ -43,8 +37,9 @@ class MoocsSpider(OCWScraper):
                                  source="磨客師")
         yield course_item
 
+    @staticmethod
     @OCWScraper.get_element_handler(default_return_value="")
-    def _get_description(self, response) -> str:
+    def _get_description(response) -> str:
         texts = response.xpath("//div[@id='cs-desc']/div[@class='content-box']/descendant-or-self::*/text()").extract()
         description = " ".join(texts).strip().replace("\n", " ")
         return description
