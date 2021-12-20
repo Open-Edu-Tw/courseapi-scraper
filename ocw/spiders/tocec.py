@@ -49,37 +49,41 @@ class TocecSpider(OCWScraper, ABC):
                 callback=self.parse_main
             )
 
-    @classmethod
-    def parse_description(cls, response, item: CourseItem):
+    def parse_description(self, response, item: CourseItem):
         description = response.css("div.ClassInfo").get()
         item.description = description
         yield item
 
+    @staticmethod
     @OCWScraper.get_element_handler(default_return_value="")
-    def _get_institution(self, tr) -> str:
+    def _get_institution(tr) -> str:
         return tr.xpath(".//td[1]/text()").get().strip()
 
+    @staticmethod
     @OCWScraper.get_element_handler(default_return_value="")
-    def _get_course_name_and_href(self, tr) -> (str, str):
+    def _get_course_name_and_href(tr) -> (str, str):
         course = tr.xpath(".//td[2]/a") #/text()").get()
         name = course.xpath("./text()").get()
         href = course.xpath("./@href").get()
 
         return name, href
 
+    @staticmethod
     @OCWScraper.get_element_handler(default_return_value="")
-    def _get_instructor(self, tr) -> str:
+    def _get_instructor(tr) -> str:
         return tr.xpath(".//td[3]/text()").get()
 
+    @staticmethod
     @OCWScraper.get_element_handler(default_return_value="")
-    def _get_start_end_date(self, tr) -> (datetime, datetime):
+    def _get_start_end_date(tr) -> (datetime, datetime):
         start_date, end_date = tr.xpath(".//td[4]/text()").get().split("至")
         start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
         end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
         return start_date, end_date
 
+    @staticmethod
     @OCWScraper.get_element_handler(default_return_value="")
-    def _get_media_type(self, tr) -> list[MediaType]:
+    def _get_media_type(tr) -> list[MediaType]:
         media_type: list[MediaType] = []
         v = tr.xpath(".//td[5]/img/@title").extract()
 

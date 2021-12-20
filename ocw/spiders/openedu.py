@@ -47,8 +47,9 @@ class OpenEduSpider(OCWScraper, ABC):
             source="中華開放教育平台"
         )
 
-    @classmethod
-    def _get_date(cls, course_dict, key) -> datetime.datetime | None:
+    @staticmethod
+    @OCWScraper.get_element_handler(default_return_value=None)
+    def _get_date(course_dict, key) -> datetime.datetime | None:
         if key in course_dict and course_dict[key]:
             return datetime.datetime.strptime(course_dict[key], "%Y-%m-%d")
         return None
