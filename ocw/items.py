@@ -45,17 +45,17 @@ class CourseItem(BaseModel):
     name: str
     # 描述文字 (html text)
     description: str
-    # 提供者隸屬的機構
+    # 開課單位 (大學/機構)
     provider_institution: str
-    # 指導者
+    # 課程老師 / 授課教師
     instructor: List[str]
     # 來源
     source: str
-    # ??
+    # 課程類型
     mode: Any = None
     # 課程英文名稱
     english_name: o_str = None
-    # 提供者隸屬的部門
+    # 開課單位 (系所)
     provider_department: o_str = None
     # 建立時間
     establish_date: o_str = None
@@ -67,13 +67,13 @@ class CourseItem(BaseModel):
     lecture_language: o_str = None
     # 字幕語言
     subtitle_language: List[str] = []
-    # 課程價格
+    # 修課費用
     price: o_str = None
-    # ? (html text)
+    # 適用對象
     TA: o_str = None
-    # 凸顯部分?
+    # 課程特色
     highlight: Any = None
-    # 排程？
+    # 課程進度表
     schedule: Any = None
     # 子分類
     subcategory: List[str] = []
@@ -83,9 +83,9 @@ class CourseItem(BaseModel):
     start_date: o_datetime = None
     # 結束日期
     end_date: o_datetime = None
-    # 評估?
+    # 學習成效評量
     evaluation: Any = None
-    # 課前要求
+    # 先備知識 / 先修科目或先備能力
     prerequisites: o_str = None
     # 其他部分
     others: Dict[str, str] = {}
@@ -93,7 +93,7 @@ class CourseItem(BaseModel):
     hours_per_week: o_int = None
     # 影片 URL
     video_url: o_str = None
-    # 截止日期
+    # 報名截止時間
     deadline: o_datetime = None
     # 更新日期
     updated_date: o_datetime = None
@@ -103,7 +103,7 @@ class CourseItem(BaseModel):
     extended_course: List[str] = []
     # 內容
     content: o_str = None
-    # ?
+    # 通過標準
     pass_standard: o_str = None
     # 證照
     certification: bool = False
@@ -115,7 +115,7 @@ class CourseItem(BaseModel):
     school_semester: o_str = None
     # 媒體數？
     media_count: o_int = None
-    # 參考
+    # 參考書籍
     references: o_str = None
-    # 主體 (html text)
+    # 目標 (html text)
     objective: o_str = None
