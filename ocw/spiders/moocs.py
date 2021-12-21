@@ -7,8 +7,8 @@ from ocw.spiders.Scraper import OCWScraper
 url = "https://taiwanmooc.org/listing/ajaxfilter_pagelink"
 
 
-class MoocsSpider(OCWScraper):
-    name = 'moocs'
+class MoocSpider(OCWScraper):
+    name = 'mooc'
     allowed_domains = ['taiwanmooc.org']
 
     def start_requests(self):
@@ -34,7 +34,7 @@ class MoocsSpider(OCWScraper):
                                      "//div[@class='teacher-box']//*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6 or self::h7 or self::h8]/text()").extract(),
                                  provider_institution=response.xpath("//*[contains(text(), 'Institution')]/following-sibling::a/text()").get(),
                                  description=self._get_description(response),
-                                 source="磨客師")
+                                 source="磨課師")
         yield course_item
 
     @staticmethod
