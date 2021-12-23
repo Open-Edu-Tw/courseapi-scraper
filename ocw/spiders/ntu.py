@@ -44,20 +44,21 @@ class NtuSpider(OCWScraper, ABC):
             media_type=self._get_media_type(response),
             source="國立臺灣大學",
         )
-
+        
+    @staticmethod
     @OCWScraper.get_element_handler(default_return_value=None)
     def _get_department(self, response) -> str:
         department = response.xpath("//h4[@class='unit']/text()").get().split(" ")[0].split("\xa0")[0]
         return department
 
-    @classmethod
+    @staticmethod
     @OCWScraper.get_element_handler(default_return_value="")
-    def _get_description(cls, response) -> str:
+    def _get_description(response) -> str:
         return response.xpath("//h4[@class='unit']/following-sibling::p/text()").get().strip()
 
-    @classmethod
+    @staticmethod
     @OCWScraper.get_element_handler(default_return_value=[])
-    def _get_media_type(cls, response) -> List[MediaType]:
+    def _get_media_type(response) -> List[MediaType]:
         def is_xpath(xpath):
             return len(response.xpath(xpath)) > 0
 

@@ -41,8 +41,9 @@ class ShardCourseSpider(OCWScraper, ABC):
             source="ShareCourse 學聯網"
         )
 
+    @staticmethod
     @OCWScraper.get_element_handler(default_return_value="")
-    def _get_description(self, response) -> str:
+    def _get_description(response) -> str:
         texts = response.xpath("//div[@id='cs-desc']/div[@class='content-box']/descendant-or-self::*/text()").extract()
         description = " ".join(texts).strip().replace("\n", " ")
         return description
