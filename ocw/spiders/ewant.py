@@ -18,7 +18,10 @@ class EwantScraper(OCWScraper, ABC):
         yield scrapy.Request(url=url, callback=self.parse_course_list)
 
     def parse_course_list(self, response):
+        # iterate all school_ids -> iterate all pages
         query = dict(parse_qsl(urlparse(response.url).query))
+        
+        # (first) iterate school_ids
         if "schoolid" not in query:
             schools = response.xpath("//select[(@id='menuschoolid')]//option[not(@value='0')]")
             school_id_dict = {}
@@ -32,13 +35,14 @@ class EwantScraper(OCWScraper, ABC):
                                      callback=self.parse_course_list,
                                      meta={"school_name": school_name})
         else:
+            # (last) iterate all courses in one page
             courses = response.xpath("//div[@class='course-info-item']")
             for course in courses:
                 course_url = course.xpath("./div[@class='courseimage']/a/@href").get()
                 yield scrapy.Request(url=course_url + "?lang=zh_tw",
                                      callback=self.parse_course,
                                      cb_kwargs={"provider_institution": response.meta["school_name"]})
-
+            # (second) iterate all pages from one school_id
             if "p" not in query:
                 pages = [page.strip() for page in response.xpath("//ul[contains(@class, 'pagination')]//li/a/text()").extract()]
                 if pages:
@@ -72,14 +76,3 @@ class EwantScraper(OCWScraper, ABC):
         else:
             teachers = [""]
         return teachers
-
-    # @staticmethod
-    # # @OCWScraper.get_element_handler(default_return_value=[])
-    # def _get_instructors(response):
-    #     teachers = response.xpath("//h3[contains(text(), '授課教師')]/following-sibling::div//table//tr")
-    #     instructors = []
-    #     for teacher in teachers:
-    #         teacher_name = teacher.xpath(".//p[2]/b/text()").get()
-    #         teacher_name = teacher_name.split(" ")[0]
-    #         instructors.append(teacher_name)
-    #     return instructors
