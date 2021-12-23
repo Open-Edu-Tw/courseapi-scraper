@@ -7,7 +7,6 @@ from ocw.spiders.Scraper import OCWScraper
 from ocw.items import CourseItem
 
 url = "https://www.ewant.org/admin/tool/mooccourse/allcourses.php?lang=zh_tw"
-general = "https://www.ewant.org/local/enterprise/generalcourse.php?id=3"
 
 
 class EwantScraper(OCWScraper, ABC):
@@ -20,7 +19,7 @@ class EwantScraper(OCWScraper, ABC):
     def parse_course_list(self, response):
         # iterate all school_ids -> iterate all pages
         query = dict(parse_qsl(urlparse(response.url).query))
-        
+
         # (first) iterate school_ids
         if "schoolid" not in query:
             schools = response.xpath("//select[(@id='menuschoolid')]//option[not(@value='0')]")
