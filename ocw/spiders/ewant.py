@@ -13,18 +13,6 @@ general = "https://www.ewant.org/local/enterprise/generalcourse.php?id=3"
 class EwantScraper(OCWScraper, ABC):
     name = 'ewant'
     allowed_domains = ['ewant.org']
-    custom_settings = {
-        "DUPEFILTER_CLASS": 'scrapy_splash.SplashAwareDupeFilter',
-        "SPLASH_URL": 'http://0.0.0.0:8050',
-        "DOWNLOADER_MIDDLEWARES": {
-            'scrapy_splash.SplashCookiesMiddleware': 723,
-            'scrapy_splash.SplashMiddleware': 725,
-            'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
-        },
-        "SPIDER_MIDDLEWARES": {
-            'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
-        }
-    }
 
     def start_requests(self):
         yield scrapy.Request(url=url, callback=self.parse_course_list)
