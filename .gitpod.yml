@@ -1,0 +1,11 @@
+tasks:
+  - name: Install dependencies
+    command:
+      poetry install
+  - name: Start MongoDB
+    command:
+      mongod
+
+vscode:
+  extensions:
+    - "ms-python.python"
