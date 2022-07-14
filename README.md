@@ -9,7 +9,16 @@ CourseAPI 開放式課程資訊匯流學院 爬蟲 repo
 
 您可基於個人需求於 local 更改程式，但請勿做出侵權或違法的行為。
 
-## 如何使用？
+## 開發
+
+### Gitpod
+
+您可以使用 Gitpod，使用我們預先配置好的環境，直接在雲端主機上進行開發。使用 Gitpod 就不需要自行設定 MongoDB、Python 3.10 以及 Poetry。
+使用 Gitpod 可以省下很大的環境配置時間，惟您可能需要注意 Gitpod 的 `Remaining hours` 開發時間限制。
+
+[![在 Gitpod 開啟](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/Open-Edu-Tw/Scraper)
+
+### 自行配置
 
 1. 下載 Python 和 Poetry（這是最基本的xD）
    1. [Python (3.10 或以上版本)](https://www.python.org/downloads/)
