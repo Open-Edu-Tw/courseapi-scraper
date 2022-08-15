@@ -16,11 +16,11 @@ keywords = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-Scrapy = "^2.6.1"
-pymongo = "^4.0.2"
-pydantic = "^1.9.0"
+Scrapy = "^2.6.2"
+pymongo = "^4.2.0"
+pydantic = "^1.9.2"
 
-pandas = "^1.4.1"
+pandas = "^1.4.3"
 
 [tool.poetry.extras]
 csv = ["pandas"]
