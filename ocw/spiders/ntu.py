@@ -47,7 +47,7 @@ class NtuSpider(OCWScraper, ABC):
         
     @staticmethod
     @OCWScraper.get_element_handler(default_return_value=None)
-    def _get_department(self, response) -> str:
+    def _get_department(response) -> str:
         department = response.xpath("//h4[@class='unit']/text()").get().split(" ")[0].split("\xa0")[0]
         return department
 
