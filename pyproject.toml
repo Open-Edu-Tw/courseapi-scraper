@@ -21,6 +21,7 @@ pymongo = "^4.2.0"
 pydantic = "^1.9.2"
 
 pandas = "^1.4.3"
+ckiptagger = {extras = ["tfgpu", "gdown"], version = "^0.2.1"}
 
 [tool.poetry.extras]
 csv = ["pandas"]
