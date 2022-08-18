@@ -5,8 +5,8 @@ pos_driver = CkipPosTagger(model="bert-base")
 
 
 def extract_keyword(sentence: list[str]) -> list[str]:
-    word_sentence_list: list[list[str]] = ws_driver(sentence)
-    pos_sentence_list: list[list[str]] = pos_driver(word_sentence_list)
+    word_sentence_list: list[list[str]] = ws_driver(sentence, show_progress = False)
+    pos_sentence_list: list[list[str]] = pos_driver(word_sentence_list, show_progress = False)
 
     return list(
         set(
