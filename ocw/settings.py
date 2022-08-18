@@ -72,6 +72,7 @@ ITEM_PIPELINES = {
     #   2. Enable it at `middlewares.py`
     #   3. Uncommenting this.
     # 'ocw.pipelines.SaveToCsvPipeline': 999,
+    'ocw.pipelines.CkipPipeline': 100,
     'ocw.pipelines.MongoDBPipeline': 999
 }
 

@@ -45,6 +45,8 @@ class CourseItem(BaseModel):
     name: str
     # 描述文字 (html text)
     description: str
+    # CKIP 產生的 keyword
+    keywords: List[str] = []
     # 開課單位 (大學/機構)
     provider_institution: str
     # 課程老師 / 授課教師
@@ -119,8 +121,3 @@ class CourseItem(BaseModel):
     references: o_str = None
     # 目標 (html text)
     objective: o_str = None
-
-
-class CourseItemWithKeyword(CourseItem):
-    # CKIP 產生的 keyword
-    keyword: List[str] = []

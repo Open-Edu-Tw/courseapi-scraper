@@ -9,6 +9,10 @@ from pymongo.collection import Collection
 from pymongo.database import Database
 
 from ocw.items import CourseItem
+from .ckip import extract_keyword
+
+word_ref_pos = {}
+keywords = []
 
 
 class PipelineAbstract(ABC):
@@ -46,6 +50,19 @@ class SaveToCsvPipeline(PipelineAbstract):
         spider.logger.info(f"CSV has been exported to {save_path}. Total records={len(df)}")
 """
 
+class CkipPipeline(PipelineAbstract):
+    def open_spider(self, spider): pass
+
+    def process_item(self, item: CourseItem, spider) -> CourseItem:
+        item.keywords = extract_keyword([
+            item.description,
+            item.name,
+        ])
+
+        return item
+
+    def close_spider(self, spider): pass
+
 
 class MongoDBPipeline(PipelineAbstract):
     db_client: MongoClient = None
@@ -65,7 +82,8 @@ class MongoDBPipeline(PipelineAbstract):
             "instructor": item.instructor,
             "description": item.description,
             "providerInstitution": item.provider_institution,
-            "source": item.source
+            "source": item.source,
+            "keywords": item.keywords,
         }
         self.insert_course(insert_dict)
         return item
