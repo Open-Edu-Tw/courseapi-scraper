@@ -128,7 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-.vscode/*
 *.code-workspace
 
 # Local History for Visual Studio Code
@@ -137,3 +136,6 @@ dmypy.json
 # CKIP
 data/
 data.zip
+
+# pdm
+.pdm.toml

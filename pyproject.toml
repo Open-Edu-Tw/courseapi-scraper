@@ -1,35 +1,60 @@
-[tool.poetry]
+[build-system]
+requires = ["pdm-pep517>=1.0.0"]
+build-backend = "pdm.pep517.api"
+
+[project]
 name = "courseapi-scraper"
-version = "0.2.0"
 description = "CourseAPI 開放式課程資訊匯流學院的爬蟲"
-authors = ["台灣開放教育推動團隊 <toedu@googlegroups.com>"]
-license = "MIT"
+authors = [
+  { name = "台灣開放教育推動團隊", email = "toedu@googlegroups.com>"}
+]
+license = { text = "MIT" }
 readme = "README.md"
-homepage = "https://toedu.g0v.tw"
-repository = "https://github.com/Open-Edu-Tw/Scraper"
 keywords = [
     "scrapy",
     "courseapi",
     "scraper",
     "open"
 ]
+requires-python = ">=3.10,<3.11"
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+    "Scrapy>=2.6.2",
+    "pymongo>=4.2.0",
+    "pydantic>=1.9.2",
+    "scipy>=1.9.0",
+    "tensorflow>=2.9.1",
+    "ckiptagger[gdown,tf]>=0.2.1",
+]
+dynamic = ["version"]
 
-[tool.poetry.dependencies]
-python = ">=3.10,<3.11"
-Scrapy = "^2.6.2"
-pymongo = "^4.2.0"
-pydantic = "^1.9.2"
+[project.urls]
+Documentation = "https://github.com/Open-Edu-Tw/courseapi-scraper#readme"
+Issues = "https://github.com/Open-Edu-Tw/courseapi-scraper/issues"
+Source = "https://github.com/Open-Edu-Tw/courseapi-scraper"
 
-pandas = "^1.4.3"
-scipy = "^1.9.0"
-tensorflow = "^2.9.1"
-ckiptagger = {extras = ["tf", "gdown"], version = "^0.2.1"}
+[project.optional-dependencies]
+csv = [
+    "pandas>=1.4.3",
+]
 
-[tool.poetry.extras]
-csv = ["pandas"]
+[tool.pdm.dev-dependencies]
+style = ["flake8", "black", "isort"]
 
-[tool.poetry.dev-dependencies]
+[tool.pdm]
+version = {from = "ocw/__init__.py"}
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.pdm.scripts]
+crawl = "scrapy crawl"
+check = { shell = "flake8 . && black --check --diff . && isort --check-only --diff ." }
+fmt = { shell = "isort . && black . && pdm run check" }
