@@ -1,18 +1,12 @@
-import os
+from ckip_transformers.nlp import CkipPosTagger, CkipWordSegmenter
 
-from ckiptagger import POS, WS, data_utils
-
-# Install the model.
-if not os.path.exists("data"):
-    data_utils.download_data_gdown("./")
-
-ws = WS("./data")
-pos = POS("./data")
+ws_driver = CkipWordSegmenter(model="bert-base")
+pos_driver = CkipPosTagger(model="bert-base")
 
 
 def extract_keyword(sentence: list[str]) -> list[str]:
-    word_sentence_list: list[list[str]] = ws(sentence)
-    pos_sentence_list: list[list[str]] = pos(word_sentence_list)
+    word_sentence_list: list[list[str]] = ws_driver(sentence)
+    pos_sentence_list: list[list[str]] = pos_driver(word_sentence_list)
 
     return list(
         set(
