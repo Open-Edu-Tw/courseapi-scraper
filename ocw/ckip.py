@@ -15,7 +15,7 @@ def extract_keyword(sentence: list[str]) -> list[str]:
     return list(set(map(
         lambda wordpos: wordpos[0],
         filter(
-            lambda wordpos: wordpos[1] == "Na",
+            lambda wordpos: wordpos[1] in ["Na", "Nb"],
             zip(
                 (word for sentence in word_sentence_list for word in sentence),
                 (pos for sentence in pos_sentence_list for pos in sentence),
