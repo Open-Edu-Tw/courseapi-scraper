@@ -13,10 +13,17 @@ class Scraper(scrapy.Spider, ABC):
                 try:
                     result = method(*args, **kwargs)
                     return result or default_return_value
-                except (IndexError, KeyError, TypeError, AttributeError) as e:  # cannot get element
-                    args[0].logger.debug(f"{method.__name__} fails. No such a element. {e}")
+                except (
+                    IndexError,
+                    KeyError,
+                    TypeError,
+                    AttributeError,
+                ) as e:  # cannot get element
+                    args[0].logger.debug(
+                        f"{method.__name__} fails. No such a element. {e}"
+                    )
                     return default_return_value
-                except Exception as e:
+                except Exception:
                     args[0].logger.exception("")
                     return default_return_value
 

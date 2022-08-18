@@ -2,6 +2,7 @@ import datetime
 from abc import ABC
 
 import scrapy
+
 from ocw.items import CourseItem
 from ocw.spiders.Scraper import OCWScraper
 
@@ -9,17 +10,22 @@ url = "https://www.openedu.tw/list.jsp"
 
 
 class OpenEduSpider(OCWScraper, ABC):
-    name = 'openedu'
-    allowed_domains = ['openedu.tw']
+    name = "openedu"
+    allowed_domains = ["openedu.tw"]
 
     def start_requests(self):
-        yield scrapy.Request(url="https://www.openedu.tw/api/courses/search?lang=en", callback=self.parse_main)
+        yield scrapy.Request(
+            url="https://www.openedu.tw/api/courses/search?lang=en",
+            callback=self.parse_main,
+        )
 
     def parse_main(self, response):
         courses = response.json()
         for course in courses:
-            yield scrapy.Request(url=f"https://www.openedu.tw/api/courses/{course['id']}/lang/zh",
-                                 callback=self.parse_course)
+            yield scrapy.Request(
+                url=f"https://www.openedu.tw/api/courses/{course['id']}/lang/zh",
+                callback=self.parse_course,
+            )
 
     def parse_course(self, response):
         course_dict = response.json()
@@ -40,11 +46,13 @@ class OpenEduSpider(OCWScraper, ABC):
             schedule=course_dict.get("schedule", None),
             evaluation=course_dict.get("assessment", None),
             subtitle_language=[course_dict.get("category", "")],
-            instructor=[instructor["name"] for instructor in course_dict["instructors"]],
+            instructor=[
+                instructor["name"] for instructor in course_dict["instructors"]
+            ],
             hours_per_week=course_dict.get("hoursPerWeek", None),
             video_url=course_dict.get("videoUrl", None),
             prerequisites=course_dict.get("prerequisite", None),
-            source="中華開放教育平台"
+            source="中華開放教育平台",
         )
 
     @staticmethod

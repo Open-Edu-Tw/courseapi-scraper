@@ -2,6 +2,7 @@ import datetime
 from abc import ABC
 
 import scrapy
+
 from ocw.items import CourseItem, MediaType
 from ocw.spiders.Scraper import OCWScraper
 
@@ -9,8 +10,8 @@ url = "https://www.tocec.org.tw/web/subjects_results.jsp"
 
 
 class TocecSpider(OCWScraper, ABC):
-    name = 'tocec'
-    allowed_domains = ['tocec.org.tw']
+    name = "tocec"
+    allowed_domains = ["tocec.org.tw"]
 
     def start_requests(self):
         yield scrapy.Request(url=url, callback=self.parse_main)
@@ -36,17 +37,19 @@ class TocecSpider(OCWScraper, ABC):
             yield scrapy.Request(
                 url=course_url,
                 callback=self.parse_description,
-                cb_kwargs={"item": course_item}
+                cb_kwargs={"item": course_item},
             )
 
         # next page
         if response.xpath("//li/a[@aria-label='Next']/@onclick"):
-            next_page = response.xpath("//li[@class='page-item active']/following-sibling::li/a/text()").get()
+            next_page = response.xpath(
+                "//li[@class='page-item active']/following-sibling::li/a/text()"
+            ).get()
             yield scrapy.FormRequest.from_response(
                 response=response,
                 formid="form",
                 formdata={"page_num": next_page},
-                callback=self.parse_main
+                callback=self.parse_main,
             )
 
     def parse_description(self, response, item: CourseItem):
@@ -62,7 +65,7 @@ class TocecSpider(OCWScraper, ABC):
     @staticmethod
     @OCWScraper.get_element_handler(default_return_value="")
     def _get_course_name_and_href(tr) -> (str, str):
-        course = tr.xpath(".//td[2]/a") #/text()").get()
+        course = tr.xpath(".//td[2]/a")  # /text()").get()
         name = course.xpath("./text()").get()
         href = course.xpath("./@href").get()
 

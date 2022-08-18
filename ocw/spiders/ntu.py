@@ -3,16 +3,15 @@ from typing import List
 
 import scrapy
 
-from ocw.spiders.Scraper import OCWScraper
-
 from ocw.items import CourseItem, MediaType
+from ocw.spiders.Scraper import OCWScraper
 
 url = "http://ocw.aca.ntu.edu.tw/ntu-ocw/ocw/coupage"
 
 
 class NtuSpider(OCWScraper, ABC):
-    name = 'ntu'
-    allowed_domains = ['ocw.aca.ntu.edu.tw']
+    name = "ntu"
+    allowed_domains = ["ocw.aca.ntu.edu.tw"]
 
     def start_requests(self):
         yield scrapy.Request(url=url, callback=self.parse_main)
@@ -23,15 +22,21 @@ class NtuSpider(OCWScraper, ABC):
         for course in courses:
             course_url = course.xpath(".//a/@href").get()
             teacher = course.xpath(".//div[@class='teacher']/text()").get().strip()
-            yield scrapy.Request(url=course_url,
-                                 callback=self.parse_course,
-                                 cb_kwargs={"teacher": teacher})
+            yield scrapy.Request(
+                url=course_url,
+                callback=self.parse_course,
+                cb_kwargs={"teacher": teacher},
+            )
 
         # next page
         if "page" not in response.meta:  # run only at first page
-            last_page_num = int(response.xpath("//a[@title='最後一頁']/@href").get().split("/")[-1])
+            last_page_num = int(
+                response.xpath("//a[@title='最後一頁']/@href").get().split("/")[-1]
+            )
             for p in range(2, last_page_num + 1):
-                yield scrapy.Request(f"{response.url}/{p}", callback=self.parse_main, meta={"page": p})
+                yield scrapy.Request(
+                    f"{response.url}/{p}", callback=self.parse_main, meta={"page": p}
+                )
 
     def parse_course(self, response, teacher: str):
         yield CourseItem(
@@ -44,17 +49,26 @@ class NtuSpider(OCWScraper, ABC):
             media_type=self._get_media_type(response),
             source="國立臺灣大學",
         )
-        
+
     @staticmethod
     @OCWScraper.get_element_handler(default_return_value=None)
     def _get_department(response) -> str:
-        department = response.xpath("//h4[@class='unit']/text()").get().split(" ")[0].split("\xa0")[0]
+        department = (
+            response.xpath("//h4[@class='unit']/text()")
+            .get()
+            .split(" ")[0]
+            .split("\xa0")[0]
+        )
         return department
 
     @staticmethod
     @OCWScraper.get_element_handler(default_return_value="")
     def _get_description(response) -> str:
-        return response.xpath("//h4[@class='unit']/following-sibling::p/text()").get().strip()
+        return (
+            response.xpath("//h4[@class='unit']/following-sibling::p/text()")
+            .get()
+            .strip()
+        )
 
     @staticmethod
     @OCWScraper.get_element_handler(default_return_value=[])

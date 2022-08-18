@@ -4,7 +4,7 @@
 # https://docs.scrapy.org/en/latest/topics/items.html
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Any, List, Dict
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel
 
@@ -27,6 +27,7 @@ class MediaType(Enum):
     PAPER - PDF/DOCX/ODF 等紙本文件
     UNKNOWN - 未定義類型
     """
+
     VIDEO = "video"
     SLIDE = "slide"
     PAPER = "paper"
@@ -39,6 +40,7 @@ class CourseItem(BaseModel):
 
     關於每個欄位的說明，可見 TypedCourseItem 的程式碼。
     """
+
     # 課程的 URL
     url: str
     # 課程名稱

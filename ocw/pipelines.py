@@ -9,6 +9,7 @@ from pymongo.collection import Collection
 from pymongo.database import Database
 
 from ocw.items import CourseItem
+
 from .ckip import extract_keyword
 
 word_ref_pos = {}
@@ -17,13 +18,16 @@ keywords = []
 
 class PipelineAbstract(ABC):
     @abstractmethod
-    def open_spider(self, spider): pass
+    def open_spider(self, spider):
+        pass
 
     @abstractmethod
-    def process_item(self, item: CourseItem, spider) -> CourseItem: pass
+    def process_item(self, item: CourseItem, spider) -> CourseItem:
+        pass
 
     @abstractmethod
-    def close_spider(self, spider): pass
+    def close_spider(self, spider):
+        pass
 
 
 # Disabled: To enable this, please enable the "csv" feature.
@@ -50,18 +54,23 @@ class SaveToCsvPipeline(PipelineAbstract):
         spider.logger.info(f"CSV has been exported to {save_path}. Total records={len(df)}")
 """
 
+
 class CkipPipeline(PipelineAbstract):
-    def open_spider(self, spider): pass
+    def open_spider(self, spider):
+        pass
 
     def process_item(self, item: CourseItem, spider) -> CourseItem:
-        item.keywords = extract_keyword([
-            item.description,
-            item.name,
-        ])
+        item.keywords = extract_keyword(
+            [
+                item.description,
+                item.name,
+            ]
+        )
 
         return item
 
-    def close_spider(self, spider): pass
+    def close_spider(self, spider):
+        pass
 
 
 class MongoDBPipeline(PipelineAbstract):
@@ -69,8 +78,8 @@ class MongoDBPipeline(PipelineAbstract):
     db: Database = None
 
     def open_spider(self, spider):
-        db_uri = spider.settings.get('MONGODB_URI', 'mongodb://localhost:27017')
-        db_name = spider.settings.get('MONGODB_DB_NAME', 'scraping')
+        db_uri = spider.settings.get("MONGODB_URI", "mongodb://localhost:27017")
+        db_name = spider.settings.get("MONGODB_DB_NAME", "scraping")
         self.db_client = MongoClient(db_uri)
         self.db = self.db_client[db_name]
 
