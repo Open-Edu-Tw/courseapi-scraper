@@ -7,10 +7,10 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'ocw'
+BOT_NAME = "ocw"
 
-SPIDER_MODULES = ['ocw.spiders']
-NEWSPIDER_MODULE = 'ocw.spiders'
+SPIDER_MODULES = ["ocw.spiders"]
+NEWSPIDER_MODULE = "ocw.spiders"
 
 FILES_STORE = "../../data"
 
@@ -20,8 +20,8 @@ FILES_STORE = "../../data"
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
-MONGODB_URI = 'mongodb://localhost:27017'
-MONGODB_DB_NAME = 'scraping'
+MONGODB_URI = "mongodb://localhost:27017"
+MONGODB_DB_NAME = "scraping"
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
@@ -72,8 +72,8 @@ ITEM_PIPELINES = {
     #   2. Enable it at `middlewares.py`
     #   3. Uncommenting this.
     # 'ocw.pipelines.SaveToCsvPipeline': 999,
-    'ocw.pipelines.CkipPipeline': 100,
-    'ocw.pipelines.MongoDBPipeline': 999
+    "ocw.pipelines.CkipPipeline": 100,
+    "ocw.pipelines.MongoDBPipeline": 999,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
