@@ -119,3 +119,8 @@ class CourseItem(BaseModel):
     references: o_str = None
     # 目標 (html text)
     objective: o_str = None
+
+
+class CourseItemWithKeyword(CourseItem):
+    # CKIP 產生的 keyword
+    keyword: List[str] = []
