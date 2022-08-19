@@ -49,12 +49,17 @@ csv = [
 ]
 
 [tool.pdm.dev-dependencies]
-style = ["flake8", "black", "isort"]
+style = [
+    "flake8",
+    "black",
+    "isort",
+    "mypy>=0.971",
+]
 
 [tool.pdm]
 version = {from = "ocw/__init__.py"}
 
 [tool.pdm.scripts]
 crawl = "scrapy crawl"
-check = { shell = "flake8 . && black --check --diff . && isort --check-only --diff ." }
+check = { shell = "flake8 . && black --check --diff . && isort --check-only --diff . && mypy ." }
 fmt = { shell = "isort . && black . && pdm run check" }
