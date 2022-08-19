@@ -1,0 +1,36 @@
+name: Check the code quality
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  actions: write
+
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: pdm check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: pdm-project/setup-pdm@main
+      name: Setup PDM
+      with:
+        python-version: "3.10"
+
+    - name: Checkout repository
+      uses: actions/checkout@v2
+  
+    - name: Install dependencies
+      run: pdm install
+    
+    - name: Run checks
+      run: pdm check
