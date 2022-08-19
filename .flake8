@@ -2,3 +2,4 @@
 ignore = E501
 exclude =
     __pypackages__
+    .venv

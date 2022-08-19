@@ -15,8 +15,4 @@ RUN \
 RUN sudo mkdir -p /data/db && sudo chown -R gitpod /data/db
 
 # Install PDM
-RUN curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python3 -
-
-# Set up the autocomplete for PDM
-RUN pdm completion bash | tee ~/.bashrc.d/65-pdm \
-    && pdm --pep582 | tee ~/.bashrc.d/66-pdm-pep582
+RUN pip install pdm && pdm completion bash | tee ~/.bashrc.d/65-pdm-completion
