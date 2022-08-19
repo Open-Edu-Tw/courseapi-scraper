@@ -12,9 +12,6 @@ from ocw.items import CourseItem
 
 from .ckip import extract_keyword
 
-word_ref_pos = {}
-keywords = []
-
 
 class PipelineAbstract(ABC):
     @abstractmethod
@@ -74,8 +71,8 @@ class CkipPipeline(PipelineAbstract):
 
 
 class MongoDBPipeline(PipelineAbstract):
-    db_client: MongoClient = None
-    db: Database = None
+    db_client: MongoClient | None = None
+    db: Database | None = None
 
     def open_spider(self, spider):
         db_uri = spider.settings.get("MONGODB_URI", "mongodb://localhost:27017")
@@ -98,8 +95,11 @@ class MongoDBPipeline(PipelineAbstract):
         return item
 
     def insert_course(self, item: dict):
+        assert self.db
+
         course: Collection = self.db.course
         course.insert_one(item)
 
     def close_spider(self, spider):
-        self.db_client.close()
+        if self.db_client:
+            self.db_client.close()

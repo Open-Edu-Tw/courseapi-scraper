@@ -1,7 +1,7 @@
 from abc import ABC
 from urllib.parse import parse_qsl, urlencode, urlparse
 
-import scrapy
+import scrapy  # type: ignore
 
 from ocw.items import CourseItem
 from ocw.spiders.Scraper import OCWScraper

@@ -1,7 +1,7 @@
 from abc import ABC
 from functools import wraps
 
-import scrapy
+import scrapy  # type: ignore
 
 
 class Scraper(scrapy.Spider, ABC):

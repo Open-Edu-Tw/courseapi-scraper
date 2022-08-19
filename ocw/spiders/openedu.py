@@ -1,7 +1,7 @@
 import datetime
 from abc import ABC
 
-import scrapy
+import scrapy  # type: ignore
 
 from ocw.items import CourseItem
 from ocw.spiders.Scraper import OCWScraper

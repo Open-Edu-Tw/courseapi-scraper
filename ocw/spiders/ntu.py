@@ -1,7 +1,7 @@
 from abc import ABC
 from typing import List
 
-import scrapy
+import scrapy  # type: ignore
 
 from ocw.items import CourseItem, MediaType
 from ocw.spiders.Scraper import OCWScraper

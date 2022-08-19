@@ -1,7 +1,8 @@
 import datetime
 from abc import ABC
+from typing import Tuple
 
-import scrapy
+import scrapy  # type: ignore
 
 from ocw.items import CourseItem, MediaType
 from ocw.spiders.Scraper import OCWScraper
@@ -64,7 +65,7 @@ class TocecSpider(OCWScraper, ABC):
 
     @staticmethod
     @OCWScraper.get_element_handler(default_return_value="")
-    def _get_course_name_and_href(tr) -> (str, str):
+    def _get_course_name_and_href(tr) -> Tuple[str, str]:
         course = tr.xpath(".//td[2]/a")  # /text()").get()
         name = course.xpath("./text()").get()
         href = course.xpath("./@href").get()
@@ -78,7 +79,7 @@ class TocecSpider(OCWScraper, ABC):
 
     @staticmethod
     @OCWScraper.get_element_handler(default_return_value="")
-    def _get_start_end_date(tr) -> (datetime, datetime):
+    def _get_start_end_date(tr) -> Tuple[datetime.datetime, datetime.datetime]:
         start_date, end_date = tr.xpath(".//td[4]/text()").get().split("至")
         start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
         end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")

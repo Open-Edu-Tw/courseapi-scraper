@@ -1,6 +1,6 @@
 import os
 
-from ckiptagger import POS, WS, data_utils
+from ckiptagger import POS, WS, data_utils  # type: ignore
 
 # Install the model.
 if not os.path.exists("data"):
